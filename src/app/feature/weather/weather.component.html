@@ -1,0 +1,19 @@
+<div class="flex gap-3 m-auto w-full justify-center self-center mb-4">
+    <button mat-fab (click)="toggleWeather()" >
+       <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="cloud" class="!text-blue-500 "></mat-icon>    
+    </button>
+    <button mat-fab (click)="toggleRailways()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="train" class="!text-blue-500 "></mat-icon>    
+     </button>
+     <button mat-fab (click)="toggleTraffic()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="directions_car" class="!text-blue-500 "></mat-icon>    
+     </button>
+</div>
+<!-- <mat-slide-toggle>Toggle me!</mat-slide-toggle> -->
+
+<div class="flex justify-center bg-cyan-100">
+    <div #mapElementWrapper class="map-element-wrapper !w-[100%] !h-[80vh]">
+        <div #mapElement class="map-element"></div>
+    </div>
+</div>
+<div id="mapid"></div>
