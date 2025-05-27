@@ -8,6 +8,21 @@
     padding: 25px 25px;
     @apply !bg-white/40 !border-none !backdrop-blur-lg;
 }
+body.darkmode .leaflet-control-rainviewer-active {
+    width: auto;
+    height: auto;
+    padding: 25px 25px;
+    @apply !bg-black/40 !border-none !backdrop-blur-lg;
+}
+
+.leaflet-control-rainviewer .btn{
+    @apply bg-white/75 p-2 m-2 rounded-full font-bold cursor-pointer hover:scale-105;
+}
+
+body.darkmode .leaflet-control-rainviewer .btn{
+    @apply bg-black/75 p-2 m-2 rounded-full font-bold cursor-pointer hover:scale-105;
+}
+
 
 .leaflet-control-rainviewer-active a.leaflet-control-rainviewer-button {
     display: none;
@@ -24,13 +39,6 @@
     clear: both;
     margin-top: 15px;
 }
-::-webkit-slider-thumb{
-    -webkit-appearance: none;
-    cursor: move;
-    transform: scale(1);
-    position: relative;
-    @apply !bg-blue-400 !text-blue-400;
-}
 
 
 .leaflet-control-rainviewer-timestamp {
@@ -39,8 +47,12 @@
     clear: both;
     margin-top: 15px;
 }
+body.darkmode .leaflet-control-rainviewer{
+    @apply !text-gray-200 !font-medium;
+}
+
 .leaflet-control-rainviewer{
-    @apply !text-blue-500;
+    @apply !text-black !font-medium;
 }
 
 
@@ -48,7 +60,7 @@
 
     -webkit-appearance: none;
     accent-color:blue!important;;
-    @apply w-full h-10 bg-transparent overflow-hidden;
+    @apply w-full h-10 !m-0 bg-transparent overflow-hidden;
   }
   
   .leaflet-control-rainviewer input[type='range']::-webkit-slider-runnable-track {
@@ -73,10 +85,19 @@
     background-color: #43e5f7; 
   }
 
-
-.leaflet-control-rainviewer .btn{
-    @apply bg-white/75 p-2 m-2 rounded-full font-bold cursor-pointer hover:scale-105;
+  .leaflet-control-rainviewer-opacityslider{
+    display:none!important;
+  }
+  .leaflet-control-rainviewer-label:last-of-type{
+    display:none!important;
+  }
+.leaflet-control-rainviewer-label{
+    @apply !m-2;
 }
+.leaflet-bar-part{
+    @apply !my-2;
+}
+
 .leaflet-control-rainviewer-close {
     position: absolute;
     right: 3px;
@@ -84,6 +105,7 @@
     width: 16px;
     height: 16px;
     opacity: 0.3;
+    display:none;
 }
 
 .leaflet-control-rainviewer-close:hover {
@@ -108,9 +130,23 @@
 .leaflet-control-rainviewer a.leaflet-control-rainviewer-button {
     
     background-size: 26px 26px;
+    display:none;
 }
 
 .leaflet-touch .leaflet-control-rainviewer a {
     background-position: 2px 2px;
 }
+.leaflet-control-attribution{
+    @apply !bg-white/75;
+}
+body.darkmode .leaflet-control-attribution{
+    @apply !bg-black/75 !backdrop-blur-lg;
+}
 
+.leaflet-control-zoom-in, .leaflet-control-zoom-out, .leaflet-control-rainviewer-button{
+    @apply !bg-[#d7e3ff] !text-[#005cbb];
+}
+
+body.darkmode .leaflet-control-zoom-in, body.darkmode .leaflet-control-zoom-out, body.darkmode .leaflet-control-rainviewer-button{
+    @apply !bg-[#161616] !text-blue-300 !border-black;
+}

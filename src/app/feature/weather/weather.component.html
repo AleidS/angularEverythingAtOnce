@@ -1,35 +1,46 @@
-<div class="h-full w-full !bg-[#00011D] m-0 flex-col">
-    <div class="flex p-4">
+<div class="h-[100%] !max-h-screen w-full {{darkMode?'!bg-[#262626]':'!bg-[#E0F7FF]'}} m-0 flex flex-col items-stretch">
+    <div class="flex p-4 h-auto justify-around ">
         <mat-slide-toggle  
             [checked]="darkMode"
             (change)="toggleDarkMode($event)"
+            class="{{darkMode?'after:!bg-blue-300':'!text-blue-500'}} mt-3 ml-5"
         >
             @if (darkMode){
-                <mat-icon naria-hidden="false" aria-label="Example home icon" fontIcon="dark_mode" class="!text-blue-500 "></mat-icon>
+                <mat-icon naria-hidden="false" aria-label="Example home icon" fontIcon="dark_mode" class="!text-blue-200 "></mat-icon>
             }
             @else {
                 <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="light_mode" class="!text-blue-500 "></mat-icon>
     
             }
         </mat-slide-toggle>
-        <div class="flex gap-3 m-auto w-full justify-center self-center mb-4 flex-1 mr-10">
-            <button mat-fab (click)="toggleWeather()" >
-               <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="cloud" class="!text-blue-500 "></mat-icon>    
+        <div class="flex gap-3 m-auto w-full justify-center self-center mb-4 flex-1 mr-4 lg:mr-10">
+            <button mat-fab (click)="toggleWeather()" class="{{darkMode?'!bg-[#363636]':''}}">
+               <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="cloud" class="{{darkMode?'!text-blue-300':'!text-blue-500'}}  "></mat-icon>   
+               @if (showWeather==true){
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="checkmark" class="{{darkMode?'!text-blue-300':'!text-blue-500'}} !absolute ml-8 mb-6 rounded-full !font-bold !text-sm"></mat-icon>   
+                } 
             </button>
-            <button mat-fab (click)="toggleRailways()">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="train" class="!text-blue-500 "></mat-icon>    
-             </button>
-             <button mat-fab (click)="toggleTraffic()">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="directions_car" class="!text-blue-500 "></mat-icon>    
-             </button>
+            <button mat-fab (click)="toggleRailways()" class="{{[darkMode?'!bg-[#363636]':'',showRailways?'scale-110 brightness-110':'']}}">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="train" class="{{[darkMode?'!text-blue-300':'!text-blue-500']}}"></mat-icon>    
+                @if (showRailways==true){
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="checkmark" class="{{darkMode?'!text-blue-300':'!text-blue-500'}} !absolute ml-8 mb-6 rounded-full !font-bold !text-sm"></mat-icon>   
+                } 
+            </button>
+             <button mat-fab (click)="toggleTraffic()" class="{{darkMode?'!bg-[#363636]':''}}">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="directions_car" class="{{darkMode?'!text-blue-300':'!text-blue-500'}} "></mat-icon>    
+                @if (showTraffic==true){
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="checkmark" class="{{darkMode?'!text-blue-300':'!text-blue-500'}} !absolute ml-8 mb-6 rounded-full !font-bold !text-sm"></mat-icon>   
+                } 
+            </button>
         </div>
         
         
     </div>
-    <div class="flex justify-center bg-[#00011D] flex-1">
-        <div #mapElementWrapper class="map-element-wrapper !w-[100%] !h-[80vh] !bg-[#00011D]">
-            <div #mapElement class="map-element !bg-[#00011D]"></div>
+    <div class="flex-1 h-full {{darkMode?'!bg-[#262626]':'!bg-[#E0F7FF]'}}">
+        <div #mapElementWrapper class="map-element-wrapper !w-[100%] !min-h-full {{darkMode?'!bg-[#262626]':'!bg-[#E0F7FF]'}} ">
+            <div #mapElement class="map-element {{darkMode?'!bg-[#262626] borders-[#262626]':'!bg-[#E0F7FF]'}} !rounded-none"></div>
         </div>
     </div>
-    <div id="mapid"></div>
+    <!-- <div id="mapid"></div> -->
 </div>
+

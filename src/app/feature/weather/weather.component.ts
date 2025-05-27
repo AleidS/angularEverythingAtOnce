@@ -34,21 +34,31 @@ export class WeatherComponent implements AfterViewInit {
    if (event.checked){
     this.addDarkMode();
     this.removeLayer('lightMode');
-    this.removeLayer('baseMap')
+    this.removeLayer('basemap')
+    this.removeLayer('Esri');
+    document.body.classList.add('darkmode');
+    this.addActiveLayers();
    }
    else{
     this.removeLayer('darkMode');
+    this.addBaseMap();
+    this.addLightMode();
+    document.body.classList.remove('darkmode');
+    this.addActiveLayers();
 
    }
   }
   toggleTraffic(){
     this.showTraffic=!this.showTraffic
 
-    if (this.showTraffic==false){
+    if (this.showTraffic==true){
       this.addTrafficIncidents();
     }
-    if (this.showTraffic==true){
-      this.removeLayer('tomtom')
+    if (this.showTraffic==false){
+      this.removeLayer('trafficFlowTomTom');
+      this.removeLayer('trafficIncidentsTomTom');
+      this.removeLayer('trafficIncidentsTomTom2');
+
     }
   }
   
@@ -89,6 +99,36 @@ export class WeatherComponent implements AfterViewInit {
       this.removeLayer('ns-delays')
     }
   }
+
+  addActiveLayers(){
+    if (this.showTraffic==true){
+      this.addTrafficIncidents();
+    }
+    if (this.showTraffic==false){
+      this.removeLayer('trafficFlowTomTom');
+      this.removeLayer('trafficIncidentsTomTom');
+      this.removeLayer('trafficIncidentsTomTom2');
+
+    }
+    if (this.showWeather){
+      this.addLayer('rain',this.rain);
+      this.rain.load(this.map)
+      // this.rain.play()
+    }
+    else{
+      this.removeLayer('rain');
+      this.rain.unload(this.map);
+      console.log('removed')
+      setTimeout(()=>{},3000)
+    }
+    if (this.showRailways){
+      this.addNSDelays()
+    }
+    else{
+      this.removeLayer('ns-delays')
+    }
+
+  }
   
   // addRailways(){
   //   this.addLayer('railways',
@@ -96,12 +136,11 @@ export class WeatherComponent implements AfterViewInit {
   //   )
   // }
   addDarkMode(){
-    this.addLayer('darkMode', L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
-      minZoom: 0,
-      maxZoom: 20,
-      attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      ext: 'png'
-    }))
+    this.addLayer('darkMode', L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20
+    }));
   }
 
   addNasa(){
@@ -115,6 +154,24 @@ export class WeatherComponent implements AfterViewInit {
       tilematrixset: 'GoogleMapsCompatible_Level'
     }));
   }
+  addLightMode(){
+    this.addLayer('lightMode', L.tileLayer(basemapProvider.cartoLightLabelOnly.uri, basemapProvider.cartoLightLabelOnly.options));
+    // this.addLayer('openstreetmap',
+    //   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+    // )
+    // this.addLayer('stadia_outdoors', L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.{ext}', {
+    //   minZoom: 0,
+    //   maxZoom: 20,
+    //   attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    //   ext: 'png'
+    // }));
+    this.addLayer('Esri', L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri'
+    }))
+  }
+  addBaseMap(){
+    this.addLayer('baseMap', L.tileLayer(basemapProvider.cartoLightNoLabel.uri, basemapProvider.cartoLightNoLabel.options));
+  }
 
   @ViewChild('mapElement') mapElement!: ElementRef<HTMLDivElement>;
   public map!: any;
@@ -125,28 +182,19 @@ export class WeatherComponent implements AfterViewInit {
   public async ngAfterViewInit(): Promise<void> {
     this.map = L.map(this.mapElement.nativeElement);
     this.map.setView([environment.leaflet.defaultCenter[0], environment.leaflet.defaultCenter[1]], 7);  
-    this.addLayer('baseMap', L.tileLayer(basemapProvider.cartoLightNoLabel.uri, basemapProvider.cartoLightNoLabel.options));
     // this.addLayer('nws', tileLayer.wms(dataProvider.nwsRadar.uri, dataProvider.nwsRadar.options));
     // this.addLayer('tomorrow', tileLayer(dataProvider.tomorrowRadar.url));
     // this.addLayer('nl',tileLayer.wms(dataProviderNL.openMeteoRadar.uri, dataProvider.nwsRadar.options));
-    
-  
-
+    this.addBaseMap();
+    this.addLightMode();
    
     // const url = environment.tomorrowIOLink
     // this.addLayer('weather', tileLayer(url))
-    // this.addLayer('openstreetmap',
-    //       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-    //   )
-    // this.addNSDelays();
-    // this.addTraffic();
-    // this.addLayer('rain',this.rain);
-    // this.rain.load(this.map)
+    this.addNSDelays();
+    this.addTrafficIncidents();
+    this.addLayer('rain',this.rain);
+    this.rain.load(this.map)
 
-    this.addLayer('lightMode', L.tileLayer(basemapProvider.cartoLightLabelOnly.uri, basemapProvider.cartoLightLabelOnly.options));
-    if (this.showWeather==true){
-      this.addLayer('rain', this.rain)
-    }
    
     // rainviewer.addTo(this.map);
   }
@@ -178,7 +226,7 @@ export class WeatherComponent implements AfterViewInit {
     console.log(geojson)
     const geoJsonLayer = L.geoJSON(geojson, {
       style: (feature: any) => ({
-        color: feature.properties.disruptionType == 'WERKZAAMHEID' ? 'yellow' : 'red',
+        color: feature.properties.disruptionType == 'WERKZAAMHEID' ? 'orange' : 'red',
         weight: 3,
         opacity: 0.8
       }),
