@@ -7,6 +7,10 @@ import { dataProvider } from 'src/app/common/helper/leaflet/data-provider';
 import { dataProviderNL } from 'src/app/common/helper/leaflet/nl-data-provider'
 import { dataProviderTomorrow } from 'src/app/common/helper/leaflet/data-provider-tomorrow';
 
+import 'src/assets/libs/leaflet.rainviewer.css';
+import { P } from 'node_modules/@angular/cdk/platform.d-B3vREl3q';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import 'leaflet.vectorgrid';
 declare const L: any;
 
 
@@ -20,19 +24,38 @@ declare const L: any;
 
 export class WeatherComponent implements AfterViewInit {
 
-  showWeather = false
-  showRailways = false
-  showTraffic = false
+  showWeather = true
+  showRailways = true
+  showTraffic = true
+  darkMode:boolean = false
 
+  toggleDarkMode(event:MatSlideToggleChange){
+   this.darkMode = event.checked
+   if (event.checked){
+    this.addDarkMode();
+    this.removeLayer('lightMode');
+    this.removeLayer('baseMap')
+   }
+   else{
+    this.removeLayer('darkMode');
+
+   }
+  }
   toggleTraffic(){
     this.showTraffic=!this.showTraffic
-    this.ngAfterViewInit()
+
+    if (this.showTraffic==false){
+      this.addTrafficIncidents();
+    }
+    if (this.showTraffic==true){
+      this.removeLayer('tomtom')
+    }
   }
   
   rain = L.control.rainviewer({
     position: 'bottomleft',
     nextButtonText: '>',
-    playStopButtonText: 'Play/Stop',
+    playStopButtonText: ' ▶⏸',
     prevButtonText: '<',
     positionSliderLabelText: "Hour:",
     opacitySliderLabelText: "Opacity:",
@@ -49,7 +72,10 @@ export class WeatherComponent implements AfterViewInit {
       // this.rain.play()
     }
     else{
-      this.removeLayer('rain')
+      this.removeLayer('rain');
+      this.rain.unload(this.map);
+      console.log('removed')
+      setTimeout(()=>{},3000)
     }
 
   }
@@ -57,53 +83,87 @@ export class WeatherComponent implements AfterViewInit {
   toggleRailways(){
     this.showRailways=!this.showRailways
     if (this.showRailways){
-      this.addRailways()
+      this.addNSDelays()
     }
     else{
-      this.removeLayer('railways')
+      this.removeLayer('ns-delays')
     }
   }
   
-  addRailways(){
-    this.addLayer('railways',
-      L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png')
-    )
+  // addRailways(){
+  //   this.addLayer('railways',
+  //     L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png')
+  //   )
+  // }
+  addDarkMode(){
+    this.addLayer('darkMode', L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
+      minZoom: 0,
+      maxZoom: 20,
+      attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      ext: 'png'
+    }))
+  }
+
+  addNasa(){
+    this.addLayer('Nasa', L.tileLayer('https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.{format}', {
+      attribution: '<a href="https://earthdata.nasa.gov">GIBS / NASA / ESDIS</a>.',
+      bounds: [[-85.0511287776, -179.999999975], [85.0511287776, 179.999999975]],
+      minZoom: 1,
+      maxZoom: 8,
+      format: 'jpg',
+      time: '',
+      tilematrixset: 'GoogleMapsCompatible_Level'
+    }));
   }
 
   @ViewChild('mapElement') mapElement!: ElementRef<HTMLDivElement>;
   public map!: any;
   private tileLayers: Map<string, any> = new Map<string, any>();
 
+  // Map providers: https://leaflet-extras.github.io/leaflet-providers/preview/
+
   public async ngAfterViewInit(): Promise<void> {
     this.map = L.map(this.mapElement.nativeElement);
     this.map.setView([environment.leaflet.defaultCenter[0], environment.leaflet.defaultCenter[1]], 7);  
-    this.addLayer('basemap', L.tileLayer(basemapProvider.cartoLightNoLabel.uri, basemapProvider.cartoLightNoLabel.options));
+    this.addLayer('baseMap', L.tileLayer(basemapProvider.cartoLightNoLabel.uri, basemapProvider.cartoLightNoLabel.options));
     // this.addLayer('nws', tileLayer.wms(dataProvider.nwsRadar.uri, dataProvider.nwsRadar.options));
     // this.addLayer('tomorrow', tileLayer(dataProvider.tomorrowRadar.url));
     // this.addLayer('nl',tileLayer.wms(dataProviderNL.openMeteoRadar.uri, dataProvider.nwsRadar.options));
     
+  
+
+   
     // const url = environment.tomorrowIOLink
     // this.addLayer('weather', tileLayer(url))
-    this.addLayer('openstreetmap',
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-      )
-  
-    this.addLayer('tomtom', L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/flow/absolute/{z}/{x}/{y}.pbf?key=${environment.tomTomApiKey}&roadTypes=[2,4,5]`))
+    // this.addLayer('openstreetmap',
+    //       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+    //   )
+    // this.addNSDelays();
+    // this.addTraffic();
+    // this.addLayer('rain',this.rain);
+    // this.rain.load(this.map)
 
-    this.addRailways();
-   
-  
-   
-    await this.addNsGeoJsonLayer();
-    this.addLayer('basemap labels', L.tileLayer(basemapProvider.cartoLightLabelOnly.uri, basemapProvider.cartoLightLabelOnly.options));
-   
+    this.addLayer('lightMode', L.tileLayer(basemapProvider.cartoLightLabelOnly.uri, basemapProvider.cartoLightLabelOnly.options));
     if (this.showWeather==true){
       this.addLayer('rain', this.rain)
     }
+   
     // rainviewer.addTo(this.map);
   }
 
-  async addNsGeoJsonLayer() {
+  addTrafficIncidents(){
+      this.addLayer('trafficFlowTomTom', L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&roadTypes=[5]&thickness=2`));
+      this.addLayer('trafficIncidentsTomTom', L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/incidents/s0/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&t=-1`));
+      this.addLayer('trafficIncidentsTomTom2', L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/incidents/s1/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&t=-1&thickness=1`));
+  }
+
+  
+  addTrafficFlow(){
+    this.addLayer('trafficFlowTomTom', L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&roadTypes=[5]&thickness=2`))
+  }
+
+
+  async addNSDelays() {
     const url = 'https://gateway.apiportal.ns.nl/Spoorkaart-API/api/v1/storingen.geojson?actual=true';
     const response = await fetch(url, {
       headers: {
@@ -128,7 +188,7 @@ export class WeatherComponent implements AfterViewInit {
         }
       }
     });
-    this.addLayer('ns-geojson', geoJsonLayer);
+    this.addLayer('ns-delays', geoJsonLayer);
   }
 
   public async addAllLayers(): Promise<void> {

@@ -1,11 +1,12 @@
+@import "tailwindcss";
 .leaflet-control-rainviewer {
 }
 
 .leaflet-control-rainviewer-active {
     width: auto;
     height: auto;
-    background-color: #fff;
     padding: 25px 25px;
+    @apply !bg-white/40 !border-none !backdrop-blur-lg;
 }
 
 .leaflet-control-rainviewer-active a.leaflet-control-rainviewer-button {
@@ -23,6 +24,14 @@
     clear: both;
     margin-top: 15px;
 }
+::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    cursor: move;
+    transform: scale(1);
+    position: relative;
+    @apply !bg-blue-400 !text-blue-400;
+}
+
 
 .leaflet-control-rainviewer-timestamp {
     text-align: center;
@@ -30,7 +39,44 @@
     clear: both;
     margin-top: 15px;
 }
+.leaflet-control-rainviewer{
+    @apply !text-blue-500;
+}
 
+
+.leaflet-control-rainviewer input[type='range'] {
+
+    -webkit-appearance: none;
+    accent-color:blue!important;;
+    @apply w-full h-10 bg-transparent overflow-hidden;
+  }
+  
+  .leaflet-control-rainviewer input[type='range']::-webkit-slider-runnable-track {
+    height: 10px;
+    -webkit-appearance: none;
+    @apply !bg-blue-400 rounded-full;
+  }
+  .leaflet-control-rainviewer input[type='range']::-webkit-slider-track {
+    height: 10px;
+    -webkit-appearance: none;
+    @apply !bg-blue-100;
+  }
+  
+  .leaflet-control-rainviewer input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    cursor: ew-resize;
+    /* box-shadow: -80px 0 0 80px #43e5f7; */
+    @apply !bg-cyan-800 size-4 rounded-full -translate-y-[3px];
+    
+  }
+  input[type="range"]::-moz-range-progress {
+    background-color: #43e5f7; 
+  }
+
+
+.leaflet-control-rainviewer .btn{
+    @apply bg-white/75 p-2 m-2 rounded-full font-bold cursor-pointer hover:scale-105;
+}
 .leaflet-control-rainviewer-close {
     position: absolute;
     right: 3px;
@@ -46,13 +92,9 @@
 }
 
 .leaflet-control-rainviewer-close:before,
-.leaflet-control-rainviewer-close:after {
-    position: absolute;
-    right: 8px;
-    content: ' ';
-    height: 16px;
-    width: 2px;
-    background-color: #333;
+.leaflet-control-rainviewer-close{
+
+    @apply !text-blue-900;
 }
 
 .leaflet-control-rainviewer-close:before {
@@ -64,7 +106,7 @@
 }
 
 .leaflet-control-rainviewer a.leaflet-control-rainviewer-button {
-    background: #fff url(images/rainviewer.png) no-repeat 0 0;
+    
     background-size: 26px 26px;
 }
 
@@ -72,9 +114,3 @@
     background-position: 2px 2px;
 }
 
-@media (-webkit-min-device-pixel-ratio:2),
-(min-resolution:192dpi) {
-    .leaflet-control-rainviewer a {
-        background-image: url(images/rainviewer@2x.png);
-    }
-}
