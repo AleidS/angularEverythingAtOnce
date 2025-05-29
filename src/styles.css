@@ -5,7 +5,8 @@
 @import "tailwindcss";
 
 html, body { 
-    height: 100vh;
+    height:100vh;
+    height: 100dvh;
     @apply bg-black;
  }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

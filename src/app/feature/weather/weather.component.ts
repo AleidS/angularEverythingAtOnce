@@ -76,7 +76,7 @@ export class WeatherComponent implements AfterViewInit {
   rain = L.control.rainviewer({
     position: 'bottomleft',
     nextButtonText: '>',
-    playStopButtonText: ' ▶⏸',
+    playStopButtonText: ' ▶⏸\u{FE0E}',
     prevButtonText: '<',
     positionSliderLabelText: "Hour:",
     opacitySliderLabelText: "Opacity:",
@@ -256,7 +256,7 @@ export class WeatherComponent implements AfterViewInit {
       this.addLayer('trafficFlowTomTom', trafficFlowLayer);
 
       
-      const trafficIncidentsLayer =  L.tileLayer(`${environment.apiBaseUrl}/tomtom-tile-proxy.php/incidents/s1/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&t=-1&thickness=1`);
+      const trafficIncidentsLayer =  L.tileLayer(`${environment.apiBaseUrl}/tomtom-tile-proxy.php/incidents/s1/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&t=-1&thickness=1`,  {attribution:'TomTom'});
       trafficFlowLayer.on('tileerror', (error: any) => {
         console.error('Traffic Incidents TomTom tile failed to load, it might be that the free API requests have run out:', error);
         // Optionally, show a user-friendly message or fallback
@@ -304,7 +304,8 @@ export class WeatherComponent implements AfterViewInit {
               :feature.properties.disruptionType )
               + `<br/> <a target="_blank" href='https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/disruption?id=${feature.id}'>More info at NS website</a>`);
           }
-        }
+        },
+   
       });
       geoJsonLayer.on('tileerror', (error: any) => {
         console.error('NS delays tile failed to load, it might be that the free NS API requests have run out:', error);
@@ -312,6 +313,7 @@ export class WeatherComponent implements AfterViewInit {
         // e.g., this.showTrafficError = true;
         this.railwayError=true
       });
+      geoJsonLayer.getAttribution = function() {return 'NS';}
       this.addLayer('ns-delays', geoJsonLayer);
     }
   }
