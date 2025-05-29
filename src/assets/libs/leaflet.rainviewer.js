@@ -83,11 +83,13 @@ L.Control.Rainviewer = L.Control.extend({
         L.DomEvent.on(this.nextButton, 'click', t.next, this);
         L.DomEvent.disableClickPropagation(this.nextButton);
 
-        this.positionSliderLabel = L.DomUtil.create('label', 'leaflet-control-rainviewer-label leaflet-bar-part', this.controlContainer);
-        this.positionSliderLabel.for = "rainviewer-positionslider";
-        this.positionSliderLabel.textContent = this.options.positionSliderLabelText;
+        this.sliderContainer = L.DomUtil.create('div', 'leaflet-control-rainviewer-slider-container', this.container);
 
-        this.positionSlider = L.DomUtil.create('input', 'leaflet-control-rainviewer-positionslider leaflet-bar-part', this.controlContainer);
+        // this.positionSliderLabel = L.DomUtil.create('label', 'leaflet-control-rainviewer-label leaflet-bar-part', this.sliderContainer);
+        // this.positionSliderLabel.for = "rainviewer-positionslider";
+        // this.positionSliderLabel.textContent = this.options.positionSliderLabelText;
+
+        this.positionSlider = L.DomUtil.create('input', 'leaflet-control-rainviewer-positionslider leaflet-bar-part', this.sliderContainer);
         this.positionSlider.type = "range";
         this.positionSlider.id = "rainviewer-positionslider";
         this.positionSlider.min = 0;
@@ -96,11 +98,11 @@ L.Control.Rainviewer = L.Control.extend({
         L.DomEvent.on(this.positionSlider, 'input', t.setPosition, this);
         L.DomEvent.disableClickPropagation(this.positionSlider);
 
-        this.opacitySliderLabel = L.DomUtil.create('label', 'leaflet-control-rainviewer-label leaflet-bar-part', this.controlContainer);
+        this.opacitySliderLabel = L.DomUtil.create('label', 'leaflet-control-rainviewer-label leaflet-bar-part', this.sliderContainer);
         this.opacitySliderLabel.for = "rainviewer-opacityslider";
         this.opacitySliderLabel.textContent = this.options.opacitySliderLabelText;
 
-        this.opacitySlider = L.DomUtil.create('input', 'leaflet-control-rainviewer-opacityslider leaflet-bar-part', this.controlContainer);
+        this.opacitySlider = L.DomUtil.create('input', 'leaflet-control-rainviewer-opacityslider leaflet-bar-part', this.sliderContainer);
         this.opacitySlider.type = "range";
         this.opacitySlider.id = "rainviewer-opacityslider";
         this.opacitySlider.min = 0;
@@ -115,7 +117,7 @@ L.Control.Rainviewer = L.Control.extend({
 
         var html = '<div id="timestamp" class="leaflet-control-rainviewer-timestamp"></div>'
 
-        this.controlContainer.insertAdjacentHTML('beforeend', html);
+        this.sliderContainer.insertAdjacentHTML('beforeend', html);
 
         L.DomEvent.disableClickPropagation(this.controlContainer);
 

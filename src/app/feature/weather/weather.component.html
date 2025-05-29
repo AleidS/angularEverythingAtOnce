@@ -1,46 +1,96 @@
-<div class="h-[100%] !max-h-screen w-full {{darkMode?'!bg-[#262626]':'!bg-[#E0F7FF]'}} m-0 flex flex-col items-stretch">
-    <div class="flex p-4 h-auto justify-around ">
-        <mat-slide-toggle  
-            [checked]="darkMode"
-            (change)="toggleDarkMode($event)"
-            class="{{darkMode?'after:!bg-blue-300':'!text-blue-500'}} mt-3 ml-5"
-        >
-            @if (darkMode){
-                <mat-icon naria-hidden="false" aria-label="Example home icon" fontIcon="dark_mode" class="!text-blue-200 "></mat-icon>
-            }
-            @else {
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="light_mode" class="!text-blue-500 "></mat-icon>
+<div class="h-[100%] relative !max-h-screen w-full {{darkMode?'!bg-[#262626]':'!bg-[#E0F7FF]'}} m-0 flex flex-col items-stretch">
     
-            }
-        </mat-slide-toggle>
-        <div class="flex gap-3 m-auto w-full justify-center self-center mb-4 flex-1 mr-4 lg:mr-10">
-            <button mat-fab (click)="toggleWeather()" class="{{darkMode?'!bg-[#363636]':''}}">
-               <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="cloud" class="{{darkMode?'!text-blue-300':'!text-blue-500'}}  "></mat-icon>   
-               @if (showWeather==true){
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="checkmark" class="{{darkMode?'!text-blue-300':'!text-blue-500'}} !absolute ml-8 mb-6 rounded-full !font-bold !text-sm"></mat-icon>   
-                } 
-            </button>
-            <button mat-fab (click)="toggleRailways()" class="{{[darkMode?'!bg-[#363636]':'',showRailways?'scale-110 brightness-110':'']}}">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="train" class="{{[darkMode?'!text-blue-300':'!text-blue-500']}}"></mat-icon>    
-                @if (showRailways==true){
-                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="checkmark" class="{{darkMode?'!text-blue-300':'!text-blue-500'}} !absolute ml-8 mb-6 rounded-full !font-bold !text-sm"></mat-icon>   
-                } 
-            </button>
-             <button mat-fab (click)="toggleTraffic()" class="{{darkMode?'!bg-[#363636]':''}}">
-                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="directions_car" class="{{darkMode?'!text-blue-300':'!text-blue-500'}} "></mat-icon>    
-                @if (showTraffic==true){
-                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="checkmark" class="{{darkMode?'!text-blue-300':'!text-blue-500'}} !absolute ml-8 mb-6 rounded-full !font-bold !text-sm"></mat-icon>   
-                } 
-            </button>
-        </div>
-        
-        
-    </div>
     <div class="flex-1 h-full {{darkMode?'!bg-[#262626]':'!bg-[#E0F7FF]'}}">
         <div #mapElementWrapper class="map-element-wrapper !w-[100%] !min-h-full {{darkMode?'!bg-[#262626]':'!bg-[#E0F7FF]'}} ">
             <div #mapElement class="map-element {{darkMode?'!bg-[#262626] borders-[#262626]':'!bg-[#E0F7FF]'}} !rounded-none"></div>
         </div>
     </div>
+
+    <div class="flex flex-wrap gap-2 py-4 p-1 sm:p-2 md:p-4 h-auto justify-around absolute top-0 left-0 backdrop-blur-lg w-full !z-9999 {{darkMode?'!bg-[#262626]/75':'!bg-primary-50/75'}}">
+        <mat-slide-toggle  
+            [checked]="darkMode"
+            (change)="toggleDarkMode($event)"
+            class="{{darkMode?'after:!bg-primary-300':'!text-primary-500'}} mt-3 ml-1 sm:ml-5"
+        >
+            @if (darkMode){
+                <mat-icon naria-hidden="false" aria-label="Example home icon" fontIcon="dark_mode" class="!text-primary-200 "></mat-icon>
+            }
+            @else {
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="light_mode" class="!text-primary-500 "></mat-icon>
+    
+            }
+        </mat-slide-toggle>
+       
+        <div class="flex gap-3 m-auto sm:w-full justify-center self-center mb-4 sm:flex-1 sm:mr-4 lg:mr-10">
+            @for (item of buttons; track item){
+                <button mat-fab [disabled]="hasError(item.error)"  (click)="item.function()" [ngClass]="['p-4 rounded-lg relative cursor-pointer hover:bg-none',isActive(item.active)? (darkMode?'custom-fab-dark !border hover:!bg-black !bg-primary-900 !border-primary-300/50 !border-b-1':'!border !bg-white !border-primary-300 !border-b-2') : (darkMode?'!bg-[#363636] hover:!bg-black ':'!bg-primary-50 !shadow-lg'),
+                hasError(item.error)?'!bg-gray-500':'']">
+                    <mat-icon aria-hidden="false" aria-label="icon" fontIcon="{{item.iconName}}" class="{{darkMode?'!text-primary-300':'!text-primary-500'}}  "></mat-icon>   
+                    @if (isActive(item.active)==true && hasError(item.error)==false){
+                     <mat-icon aria-hidden="false" aria-label="checkmark" fontIcon="checkmark" class="{{darkMode?'!text-primary-300':'!text-primary-500'}} !absolute ml-8 mb-6 rounded-full !font-bold !text-sm"></mat-icon>   
+                     } 
+                     @if (hasError(item.error)==true){
+                        <mat-icon aria-hidden="false" aria-label="danger" fontIcon="close" class="{{darkMode?'!text-red-500/50':'!text-red-500/50'}} !absolute !w-full !h-full !m-auto top-2 !text-3xl rounded-full !font-bold "></mat-icon>   
+                        } 
+                 </button>
+            }
+        </div>
+        <button mat-fab  (click)="toggleLegend()" [ngClass]="['p-4 rounded-lg cursor-pointer',darkMode?'!bg-[#363636] hover:!bg-black ':'!bg-transparent !shadow-none']">
+                 
+            <mat-icon aria-hidden="false" aria-label="danger" fontIcon="list" class="{{darkMode?'!text-primary-300 font-bold':'!text-primary-600 font-medium'}}"></mat-icon>   
+        </button>
+    </div>
+    
+
+   
+    @if (trafficError===true && trafficErrorShown == false){
+        <dialog open class="!absolute !z-999 m-auto">
+            <div>
+                <mat-icon aria-hidden="false" aria-label="icon" fontIcon="warning" class="text-red-600"></mat-icon>   
+
+                <p>
+                    There was an error loading some or all of the traffic data, 
+                    perhaps the TomTom Free API limit was reached for today.
+                </p>               
+                <button (click)="trafficError=false; trafficErrorShown=true" mat-flat-button class="!w-fit m-auto">Understood</button>
+            </div>
+        </dialog>
+    }
+    @if (railwayError===true && railwayErrorShown == false){
+        <dialog open class="!absolute !z-999 m-auto">
+            <div>
+                <mat-icon aria-hidden="false" aria-label="icon" fontIcon="warning" class="text-red-600"></mat-icon>   
+
+                <p>
+                    There was an error loading some or all of the Dutch Railway delays data, 
+                    perhaps the NS Free API limit was reached.
+                </p>               
+                <button (click)="railwayError=false; railwayErrorShown=true" mat-flat-button class="!w-fit m-auto">Understood</button>
+            </div>
+        </dialog>
+    }
     <!-- <div id="mapid"></div> -->
+
+    @if (showLegend){
+    <div [ngClass]="['absolute w-64 h-fit z-9999 right-4 top-20 bg-white/90 backdrop-blur text-left p-4 rounded-lg',darkMode?'!bg-black/75 text-white':'']">
+        <span class="font-medium">Trains</span> <br/>
+        <span class="rounded-full w-[20px] h-[4px] bg-[#dd0000] inline-block"></span> disruption <br/>
+        <span class="rounded-full w-[20px] h-[4px] bg-orange-400 inline-block"></span> maintainance <br/>
+        <br/>
+      <span class="font-medium">  Traffic speed</span> <br/> (compared to normal) <br/>
+        <span class="rounded-full w-[20px] h-[2px] bg-[#2bc82b] inline-block"></span> 100% <br/>
+        <span class="rounded-full w-[20px] h-[2px] bg-[#DDDD37] inline-block"></span> 80-99%  <br/>
+        <span class="rounded-full w-[20px] h-[2px] bg-[#FF2323] inline-block"></span> 0.1-80%  <br/>
+        <span class="rounded-full w-[20px] h-[2px] bg-[#777777] inline-block"></span> <0.1%  <br/>
+        <br/>
+        <span class="font-medium">Traffic incidents</span> <br/>
+        <span class="rounded-full w-[20px] h-[2px] border border-[#FFA236] border-dashed bg-[#FFFFFF] inline-block"></span> Minor <br/>
+        <span class="rounded-full w-[20px] h-[2px] border border-[#FF151C] border-dashed  bg-[#FFFFFF] inline-block"></span> Moderate  <br/>
+        <span class="rounded-full w-[20px] h-[2px] border border-[#BE0F13] border-dashed bg-[#FFFFFF] inline-block"></span> Major  <br/>
+        <span class="rounded-full w-[20px] h-[2px] border border-[#BFBFBF] border-dashed bg-[#FFFFFF] inline-block"></span> closures/indefinite delays  <br/>
+    </div>
+    }
+    
 </div>
+
 

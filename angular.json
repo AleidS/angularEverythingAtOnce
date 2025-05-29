@@ -44,7 +44,9 @@
               
             ],
             "scripts": [
-             
+              "node_modules/leaflet/dist/leaflet.js",
+              "src/assets/libs/leaflet.rainviewer.js"
+
             ]
           },
           "configurations": {

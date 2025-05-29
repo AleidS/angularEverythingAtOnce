@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind utilities;
+@config "../tailwind.config.js";
+
 @import "tailwindcss";
+
 html, body { 
     height: 100vh;
     @apply bg-black;
@@ -16,4 +20,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .map-element {
     border-radius: 12px;
     height: 100%;
+}
+
+dialog{
+    @apply bg-white/10 backdrop-blur-2xl min-w-screen min-h-screen flex items-center justify-center m-0 top-0 left-0;
+}
+dialog div{
+    @apply p-4 bg-white rounded-xl m-auto w-96 flex flex-col gap-y-4;
+}
+body.darkmode dialog div{
+    @apply bg-primary-900 text-primary-50;
 }

@@ -24,17 +24,25 @@ declare const L: any;
 
 export class WeatherComponent implements AfterViewInit {
 
-  showWeather = true
-  showRailways = true
-  showTraffic = true
+
+  public showWeather:boolean = true
+  public showRailways:boolean = true
+  public showTraffic:boolean = true
   darkMode:boolean = false
+  trafficError:boolean=false
+  trafficErrorShown:boolean=false
+  railwayError:boolean=false
+  railwayErrorShown:boolean=false
+  weatherError:boolean=false //not used
+  weatherErrorShown:boolean=false
+  showLegend:boolean=false;
 
   toggleDarkMode(event:MatSlideToggleChange){
    this.darkMode = event.checked
    if (event.checked){
     this.addDarkMode();
     this.removeLayer('lightMode');
-    this.removeLayer('basemap')
+    this.removeLayer('baseMap')
     this.removeLayer('Esri');
     document.body.classList.add('darkmode');
     this.addActiveLayers();
@@ -60,6 +68,9 @@ export class WeatherComponent implements AfterViewInit {
       this.removeLayer('trafficIncidentsTomTom2');
 
     }
+  }
+  toggleLegend(){
+    this.showLegend=!this.showLegend;
   }
   
   rain = L.control.rainviewer({
@@ -111,8 +122,8 @@ export class WeatherComponent implements AfterViewInit {
 
     }
     if (this.showWeather){
-      this.addLayer('rain',this.rain);
-      this.rain.load(this.map)
+      // this.addLayer('rain',this.rain);
+      // this.rain.load(this.map)
       // this.rain.play()
     }
     else{
@@ -129,6 +140,38 @@ export class WeatherComponent implements AfterViewInit {
     }
 
   }
+  
+
+  buttons : {name:string,function:Function,iconName:string,active:string,error:string}[] = [
+    {name:'weather',
+      function: ()=> this.toggleWeather(),
+      iconName:'cloud',
+      active:'showWeather',
+      error:'weatherErrorShown'
+    },
+    {name:'trains',
+      function: ()=> this.toggleRailways(),
+      iconName:'train',
+      active:'showRailways',
+      error:'railwayErrorShown',
+    },
+    {name:'traffic',
+      function: ()=> this.toggleTraffic(),
+      iconName:'directions_car',
+      active:'showTraffic',
+      error:'trafficErrorShown',
+    },
+  ];
+//cant put this.showTraffic directly in above array because it won't udpate, so;
+
+  isActive(prop: string) {
+    return (this as any)[prop];
+  }
+  hasError(prop: string) {
+    return (this as any)[prop];
+  }
+
+
   
   // addRailways(){
   //   this.addLayer('railways',
@@ -200,9 +243,31 @@ export class WeatherComponent implements AfterViewInit {
   }
 
   addTrafficIncidents(){
-      this.addLayer('trafficFlowTomTom', L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&roadTypes=[5]&thickness=2`));
-      this.addLayer('trafficIncidentsTomTom', L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/incidents/s0/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&t=-1`));
-      this.addLayer('trafficIncidentsTomTom2', L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/incidents/s1/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&t=-1&thickness=1`));
+    let trafficFlowLayer = null
+    if (this.darkMode){
+      trafficFlowLayer = L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&roadTypes=[5]&thickness=2`);
+
+    }
+    else{
+      trafficFlowLayer = L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&roadTypes=[5]&thickness=2`);
+    }
+      trafficFlowLayer.on('tileerror', (error: any) => {
+        console.error('Traffic Flow TomTom tile failed to load, it might be that the free API requests have run out:', error);
+        // Optionally, show a user-friendly message or fallback
+        // e.g., this.showTrafficError = true;
+        this.trafficError=true
+      });
+      this.addLayer('trafficFlowTomTom', trafficFlowLayer);
+
+      
+      const trafficIncidentsLayer =  L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/incidents/s1/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&t=-1&thickness=1`);
+      trafficFlowLayer.on('tileerror', (error: any) => {
+        console.error('Traffic Incidents TomTom tile failed to load, it might be that the free API requests have run out:', error);
+        // Optionally, show a user-friendly message or fallback
+        // e.g., this.showTrafficError = true;
+        this.trafficError=true
+      });
+      this.addLayer('trafficIncidentsTomTom2',trafficIncidentsLayer)
   }
 
   
@@ -220,23 +285,39 @@ export class WeatherComponent implements AfterViewInit {
     });
     if (!response.ok) {
       console.error('Failed to fetch NS GeoJSON:', response.statusText);
-      return;
+      // Optionally, show a user-friendly message or fallback
+      // e.g., this.showTrafficError = true;
+      this.railwayError=true
     }
     const geojson = await response.json();
     console.log(geojson)
-    const geoJsonLayer = L.geoJSON(geojson, {
-      style: (feature: any) => ({
-        color: feature.properties.disruptionType == 'WERKZAAMHEID' ? 'orange' : 'red',
-        weight: 3,
-        opacity: 0.8
-      }),
-      onEachFeature: (feature: any, layer: any) => {
-        if (feature.properties && feature.properties.disruptionType) {
-          layer.bindPopup(feature.properties.disruptionType);
+    if (response.ok){
+      const geoJsonLayer = L.geoJSON(geojson, {
+        style: (feature: any) => ({
+          color: feature.properties.disruptionType == 'WERKZAAMHEID' ? 'orange' : '#DD0000',
+          weight: 4,
+          opacity: 0.8
+        }),
+        onEachFeature: (feature: any, layer: any) => {
+          if (feature.properties && feature.properties.disruptionType) {
+            layer.bindPopup(
+            (feature.properties.disruptionType == 'WERKZAAMHEID' ? 
+              `Train/Track Maintainance `
+              :feature.properties.disruptionType == 'STORING' ? 
+              `Train Disruption`
+              :feature.properties.disruptionType )
+              + `<br/> <a target="_blank" href='https://www.ns.nl/reisinformatie/actuele-situatie-op-het-spoor/disruption?id=${feature.id}'>More info at NS website</a>`);
+          }
         }
-      }
-    });
-    this.addLayer('ns-delays', geoJsonLayer);
+      });
+      geoJsonLayer.on('tileerror', (error: any) => {
+        console.error('NS delays tile failed to load, it might be that the free NS API requests have run out:', error);
+        // Optionally, show a user-friendly message or fallback
+        // e.g., this.showTrafficError = true;
+        this.railwayError=true
+      });
+      this.addLayer('ns-delays', geoJsonLayer);
+    }
   }
 
   public async addAllLayers(): Promise<void> {
