@@ -1,2 +1,3 @@
+APP_ENV = local
 TOMTOM_API_KEY = 'please generate your own API key here; https://app.tomorrow.io/home'
 NS_API_KEY= 'please generate your own API key here; http://apiportal.ns.nl'
