@@ -64,7 +64,7 @@ export class WeatherComponent implements AfterViewInit {
     }
     if (this.showTraffic==false){
       this.removeLayer('trafficFlowTomTom');
-      this.removeLayer('trafficIncidentsTomTom');
+      // this.removeLayer('trafficIncidentsTomTom');
       this.removeLayer('trafficIncidentsTomTom2');
 
     }
@@ -115,12 +115,12 @@ export class WeatherComponent implements AfterViewInit {
     if (this.showTraffic==true){
       this.addTrafficIncidents();
     }
-    if (this.showTraffic==false){
-      this.removeLayer('trafficFlowTomTom');
-      this.removeLayer('trafficIncidentsTomTom');
-      this.removeLayer('trafficIncidentsTomTom2');
+    // if (this.showTraffic==false){
+    //   this.removeLayer('trafficFlowTomTom');
+    //   // this.removeLayer('trafficIncidentsTomTom');
+    //   this.removeLayer('trafficIncidentsTomTom2');
 
-    }
+    // }
     if (this.showWeather){
       // this.addLayer('rain',this.rain);
       // this.rain.load(this.map)
@@ -244,13 +244,9 @@ export class WeatherComponent implements AfterViewInit {
 
   addTrafficIncidents(){
     let trafficFlowLayer = null
-    if (this.darkMode){
-      trafficFlowLayer = L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&roadTypes=[5]&thickness=2`);
-
-    }
-    else{
-      trafficFlowLayer = L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&roadTypes=[5]&thickness=2`);
-    }
+ 
+      trafficFlowLayer = L.tileLayer(`${environment.apiBaseUrl}/tomtom-tile-proxy.php/flow/relative/{z}/{x}/{y}.png?roadTypes=[5]&thickness=2`);
+    
       trafficFlowLayer.on('tileerror', (error: any) => {
         console.error('Traffic Flow TomTom tile failed to load, it might be that the free API requests have run out:', error);
         // Optionally, show a user-friendly message or fallback
@@ -260,7 +256,7 @@ export class WeatherComponent implements AfterViewInit {
       this.addLayer('trafficFlowTomTom', trafficFlowLayer);
 
       
-      const trafficIncidentsLayer =  L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/incidents/s1/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&t=-1&thickness=1`);
+      const trafficIncidentsLayer =  L.tileLayer(`${environment.apiBaseUrl}/tomtom-tile-proxy.php/incidents/s1/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&t=-1&thickness=1`);
       trafficFlowLayer.on('tileerror', (error: any) => {
         console.error('Traffic Incidents TomTom tile failed to load, it might be that the free API requests have run out:', error);
         // Optionally, show a user-friendly message or fallback
@@ -272,12 +268,12 @@ export class WeatherComponent implements AfterViewInit {
 
   
   addTrafficFlow(){
-    this.addLayer('trafficFlowTomTom', L.tileLayer(`https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=${environment.tomTomApiKey}&roadTypes=[5]&thickness=2`))
+    this.addLayer('trafficFlowTomTom', L.tileLayer(`${environment.apiBaseUrl}/tomtom-tile-proxy.php/flow/relative/{z}/{x}/{y}.png?roadTypes=[5]&thickness=2`))
   }
 
 
   async addNSDelays() {
-    const url = 'https://gateway.apiportal.ns.nl/Spoorkaart-API/api/v1/storingen.geojson?actual=true';
+    const url = `${environment.apiBaseUrl}/ns-delays-proxy.php`;
     const response = await fetch(url, {
       headers: {
         'Ocp-Apim-Subscription-Key': environment.nsApiKey

@@ -126,6 +126,7 @@ L.Control.Rainviewer = L.Control.extend({
 
     unload: function(e) {
         L.DomUtil.remove(this.controlContainer);
+        L.DomUtil.remove(this.sliderContainer);
         L.DomUtil.remove(this.closeButton);
         L.DomUtil.removeClass(this.container, 'leaflet-control-rainviewer-active');
         console.log(this.radarLayers);
