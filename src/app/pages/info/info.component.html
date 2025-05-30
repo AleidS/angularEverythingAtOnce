@@ -1,0 +1,71 @@
+<div class="bg-primary-100 relative min-h-full p-0 sm:p-4  pt-10 md:pt-20">
+    <div class="w-full max-w-[600px] mx-auto flex justify-start mb-10 p-4 sm:-0">
+        <a mat-flat-button routerLink="/" class="!bg-primary-500">
+            <mat-icon fontIcon="arrow_left"></mat-icon>
+            Go back
+        </a>
+    </div>
+    <div class="max-w-[600px] !h-fit mx-auto text-left bg-white p-6 rounded-none sm:rounded-3xl py-10">
+        <mat-icon fontIcon="info_circle" class="!text-primary-500 !text-3xl !size-10"></mat-icon>
+        <h1 class="text-lg font-semibold mb-4">Weer Trein Verkeer INFO</h1>
+        <p>Hi! This website was made as a portfolio project, to learn Angular and practice with Typescript. 
+            It also uses some Material Design buttons/icons/switches, and TailwindCSS for styling.
+            <br/><br/>
+            It shows rain data and traffic data worldwide, 
+            and train disruptions for the <strong>Dutch railways</strong>, all at once. (I'll admit it's a bit random, thinking of practice projects can be a challenge🙃)
+            <br/><br/>
+            <strong>How It's Made</strong><br/>
+            The map is based on <a target="_blank" href="https://leafletjs.com/">Leaflet.js</a>. 
+            For the data (Leaflet tiles), I used: 
+            </p>
+            <ul>
+                <li>
+                    the <a target="_blank" href="https://apiportal.ns.nl/apis">NS API</a> for railway disruptions, which provides GeoJSON data, allowing for custom colors, labels, popups, etc,
+                </li>
+                <li>
+                    the <a target="_blank" href="https://developer.tomtom.com/traffic-api/documentation/product-information/introduction">TOMTOM API</a> for traffic data, which gives data in PNG format (per tile, depending om zoom/location),
+                </li>
+                <li>
+                    and <a target="_blank" href="https://github.com/mwasil/Leaflet.Rainviewer">the Rainviewer plugin for leaflet </a> which I have no clue how it works exactly and where it gets the data from, but it works 👌.
+                </li>
+            </ul>
+            <p>
+
+            <br/>
+            The API's are all free versions, so they might run out of requests quickly 
+            after which those parts will stop working (you should get a warning!) :) 
+            <br/>
+            <br/>
+            <strong>I also had some help.. ♫ ain't like I can make this kinda mess all by myself♫</strong>
+                <br/>
+            I also used a few tutorials, especially 
+            <a target="_blank" href="https://levelup.gitconnected.com/creating-a-free-weather-map-with-angular-leaflet-and-the-noaa-1cd89570c4ff">this one</a> 
+            by Johathan Sanders (though NOAA didnt work for Dutch Weather), 
+            and to get started with Angular, this <a href="https://www.youtube.com/watch?v=23o0evRtrFI&ab_channel=Fireship">Angular beginner tutorial</a> by Fireship. 
+            And I used quite some help from co-pilot, 
+            without which I would not have completed this in one week. 
+            Though more on how to approach things, 
+            rather than to code the whole thing.
+            <br/>
+            <br/>
+            The code is on <a target="_blank" href="https://github.com/AleidS/angularEverythingAtOnce">github</a>, and you can use it to make your own version with your own API keys, and add whatever other data/layers you find useful!
+            <br/>
+            <br/>
+            Happy Travel planning!
+            <br/><br/>
+            Aleid
+            <br/><br/><br/>
+            Other projects:
+            <a target="_blank" href="https://www.aleidsuzan.com/portfolio">Portfolio</a>
+            <br/><br/>
+            Contact:
+            <a target="_blank" href="mailto:aleidoonk@gmail.com">Mail</a> or <a href="https://linkedin.com/in/aleido">Linkedin</a>
+            <br/><br/>
+            Suggestions, questions and feedback always welcome! Especially on API's for other railway networks :) I'm planning on a code refactor, some darkmode additions and language options.
+            <br/><br/>
+            PS: I tried to make it so that API keys are hidden and misuse shouldn't occur, but if any API provider has complaints, please let me know so I can fix things:)
+        </p>
+        
+    </div>
+    
+</div>

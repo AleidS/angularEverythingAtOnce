@@ -4,7 +4,10 @@
         <div #mapElementWrapper class="map-element-wrapper !w-[100%] !min-h-full {{darkMode?'!bg-[#262626]':'!bg-[#E0F7FF]'}} ">
             <div #mapElement class="map-element {{darkMode?'!bg-[#262626] borders-[#262626]':'!bg-[#E0F7FF]'}} !rounded-none"></div>
         </div>
+        
     </div>
+
+   
 
     <div class="flex flex-wrap gap-2 py-4 p-1 sm:p-2 md:p-4 h-auto justify-around absolute top-0 left-0 backdrop-blur-lg w-full !z-9999 {{darkMode?'!bg-[#262626]/75':'!bg-primary-50/75'}}">
         <mat-slide-toggle  
@@ -35,11 +38,19 @@
                  </button>
             }
         </div>
-        <button mat-fab  (click)="toggleLegend()" [ngClass]="['p-4 rounded-lg cursor-pointer',darkMode?'!bg-[#363636] hover:!bg-black ':'!bg-transparent !shadow-none']">
-                 
-            <mat-icon aria-hidden="false" aria-label="danger" fontIcon="list" class="{{darkMode?'!text-primary-300 font-bold':'!text-primary-600 font-medium'}}"></mat-icon>   
-        </button>
+       <div class="flex flex-col gap-0 h-fit items-center pr-2 pt-1">
+            <button  routerLink="/info" class="cursor-pointer {{darkMode?'!text-primary-300 font-bold':'!text-primary-600 font-medium'}}">
+                <mat-icon fontIcon="info-circle" class="!m-0"></mat-icon>
+            </button>
+            <button (click)="toggleLegend()" [ngClass]="['rounded-lg cursor-pointer',darkMode?'!bg-[#363636] hover:!bg-black ':'!bg-transparent !shadow-none']">
+                     
+                <mat-icon aria-hidden="false" aria-label="danger" fontIcon="list" class="{{darkMode?'!text-primary-300 font-bold':'!text-primary-600 font-medium'}}"></mat-icon>   
+            </button>
+           
+          
+       </div>
     </div>
+ 
     
 
    

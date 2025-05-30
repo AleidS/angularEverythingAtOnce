@@ -189,3 +189,10 @@ body.darkmode .leaflet-control-zoom-in, body.darkmode .leaflet-control-zoom-out,
 .mdc-switch__track::after{
     @apply !bg-primary-400 !text-black !border-primary-400;
 }
+
+.trainLabel{
+    @apply !bg-white p-0 border-none h-5 w-4 flex items-center justify-center rounded-lg;
+}
+.trainWarning{
+    @apply !z-999;
+}

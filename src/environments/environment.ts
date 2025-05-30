@@ -5,7 +5,7 @@ export const environment = {
     production: false,
     serviceWorker: false,
     // Change this to your own api endpoint url! (Where you put the files from 'app' folder)
-    apiBaseUrl: 'http://aleidsuzan.com/weertreinverkeer/backend',
+    apiBaseUrl: 'https://www.weertreinverkeer.nl/backend',
     // Api keys are now in the back-end! ignore below
     tomorrowApiKey:'please generate your own api key here; https://app.tomorrow.io/home ',
     nsApiKey: 'please generate your own API key at apiportal.ns.nl',

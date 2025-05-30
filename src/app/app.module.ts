@@ -10,12 +10,14 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatButtonModule} from '@angular/material/button';
 // import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 import { WeatherComponent } from "./feature/weather/weather.component";
+import { InfoComponent } from './pages/info/info.component';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    InfoComponent,
 
     // LeafletMapComponent,
   ],

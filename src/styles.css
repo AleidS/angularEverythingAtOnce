@@ -7,9 +7,17 @@
 html, body { 
     height:100vh;
     height: 100dvh;
-    @apply bg-black;
  }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+a{
+    @apply text-primary-500 underline cursor-pointer;
+}
+
+ul {
+    list-style-type: "• ";
+    @apply ml-10
+  }
 
 @import 'leaflet/dist/leaflet.css';
 .map-element-wrapper {
